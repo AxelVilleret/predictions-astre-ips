@@ -36,3 +36,18 @@
     transform: rotate(360deg);
   }
 }
+
+.container_hypothesis {
+  display: flex;
+
+}
+
+.container_hypothesis .container_hypothesis__item {
+  margin: 10px;
+  padding: 40px;
+  text-align: center;
+  background-color: #e5e5e5;
+  border-radius: 10px;
+  width: 100%;
+  border: #282c34 3px solid;
+}

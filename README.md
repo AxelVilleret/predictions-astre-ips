@@ -15,7 +15,7 @@ npm install
 For the script, use pip:
 
 ```bash
-pip install fastapi uvicorn
+pip install -r requirements.txt
 ```
 
 ## Usage

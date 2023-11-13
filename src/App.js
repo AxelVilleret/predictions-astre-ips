@@ -21,7 +21,7 @@ function App() {
   }, []);
 
   const getScores = () => {
-    axios.get("http://localhost:8000/results").then((res) => {
+    axios.get(process.env.REACT_APP_URL_SCRIPT + "results").then((res) => {
       // console.log(res.data);
       setEtus(res.data.map((etu) => etu.num_etu));
       setScores(res.data.map((etu) => etu.value));
@@ -29,7 +29,7 @@ function App() {
   }
 
   const getHypothesis = () => {
-    axios.get("http://localhost:8000/hypothesis").then((res) => {
+    axios.get(process.env.REACT_APP_URL_SCRIPT + "hypothesis").then((res) => {
       console.log(res.data);
       setHypothesis(res.data);
     });
@@ -58,7 +58,7 @@ function App() {
   const updateResults = () => {
     console.log('ok');
 
-    axios.post("http://localhost:8000/results", hypothesis).then((res) => {
+    axios.post(process.env.REACT_APP_URL_SCRIPT + "results", hypothesis).then((res) => {
       console.log(res.data);
       setEtus(res.data.map((etu) => etu.num_etu));
       setScores(res.data.map((etu) => etu.value));

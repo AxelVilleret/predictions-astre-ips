@@ -3,7 +3,7 @@ import { Form, Button } from 'react-bootstrap';
 import Alert from 'react-bootstrap/Alert';
 
 function MyForm({ onFormValidated, validationCallback }) {
-    const options = ['C', 'Domotique', 'Arduino'];
+    const options = ['C', 'Domotique', 'Arduino', 'JavaScript, HTML, CSS', 'VSCode', 'PME / Startups', 'Créer du contenu', 'Téléphone'];
 
     const [selectedOption, setSelectedOption] = useState('ips');
     const [selectedOptions, setSelectedOptions] = useState([]);

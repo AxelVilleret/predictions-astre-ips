@@ -21,6 +21,7 @@ ChartJS.register(
 
 
 export default function BarChartComponent({ title, labels, datas }) {
+    
 
     const options = {
         responsive: true,

@@ -1,5 +1,4 @@
 import csv
-import json
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import List
@@ -63,7 +62,6 @@ def get_results(hypothesis, answers):
 app = FastAPI()
 
 origins = [
-    "http://localhost",
     "http://localhost:3000",
 ]
 

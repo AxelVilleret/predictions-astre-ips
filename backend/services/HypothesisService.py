@@ -11,7 +11,7 @@ class HypothesisService:
         return self.hypotheses
     
     def add_hypothesis(self, hypothesis):
-        if self._is_existing_hypothesis(hypothesis):
+        if self._is_existing_hypothesis(hypothesis) or hypothesis.key_words == []:
             return False
         self.hypotheses.append(hypothesis)
         self._write_hypotheses(self.hypotheses)

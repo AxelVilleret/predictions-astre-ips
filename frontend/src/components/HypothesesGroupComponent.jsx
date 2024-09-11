@@ -15,7 +15,7 @@ export default function HypothesesGroupComponent({ hypotheses, onUpdateHypothesi
                                 min="1"
                                 max="5"
                                 value={Math.abs(hypo.weight)}
-                                onChange={(e) => onUpdateHypothesis(hypo, e.target.value)}
+                                onChange={(e) => onUpdateHypothesis({ ...hypo, weight: hypo.weight > 0 ? e.target.value : -e.target.value })}
                             />
                         </Form.Group>
                     );

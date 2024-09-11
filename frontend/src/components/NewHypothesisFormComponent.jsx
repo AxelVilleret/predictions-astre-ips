@@ -2,19 +2,19 @@ import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import Alert from 'react-bootstrap/Alert';
 
-function MyForm({ onFormValidated, validationCallback }) {
+export default function MyForm({ onFormValidated }) {
     const options = ['C', 'Domotique', 'Arduino', 'JavaScript, HTML, CSS', 'VSCode', 'PME / Startups', 'Créer du contenu', 'Téléphone'];
 
     const [selectedOption, setSelectedOption] = useState('ips');
-    const [selectedOptions, setSelectedOptions] = useState([]);
+    const [selectedKeywords, setSelectedKeywords] = useState([]);
     const [weight, setWeight] = useState(1);
     const [show, setShow] = useState(false);
     const [alertMessage, setAlertMessage] = useState('');
     const [alertType, setAlertType] = useState('danger');
 
-    const handleChangeHypothesis = (event) => {
+    const updateSelectedKeywords = (event) => {
         const value = event.target.value;
-        setSelectedOptions(prevState =>
+        setSelectedKeywords(prevState =>
             prevState.includes(value) ? prevState.filter(option => option !== value) : [...prevState, value]
         );
     }
@@ -30,39 +30,28 @@ function MyForm({ onFormValidated, validationCallback }) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        if (selectedOptions.length === 0) {
-            setAlertType('danger');
-            setShow(true);
-            setAlertMessage('Veuillez sélectionner au moins un mot clé');
-            setTimeout(() => {
-                setShow(false);
-            }, 3000);
-            return;
-        }
-        if (validationCallback(selectedOptions)) {
-            setAlertType('danger');
-            setShow(true);
-            setAlertMessage('Cette hypothèse existe déjà');
-            setTimeout(() => {
-                setShow(false);
-            }, 3000);
-            return;
-        }
-        setAlertType('success');
-        setShow(true);
-        setAlertMessage('Hypothèse ajoutée');
-        setTimeout(() => {
-            setShow(false);
-        }, 3000);
         onFormValidated({
-            key_words: selectedOptions,
-            weight: selectedOption === 'ips' ? weight : -weight
+            key_words: selectedKeywords,
+            weight: selectedOption === 'ips' ? weight : -weight,
+        }).then(() => {
+            setAlertMessage('Hypothèse ajoutée avec succès');
+            setAlertType('success');
+            setShow(true);
+            setTimeout(() => {
+                setShow(false);
+            }, 2000);
+        }).catch((error) => {
+            setAlertMessage(error.message);
+            setAlertType('danger');
+            setShow(true);
+            setTimeout(() => {
+                setShow(false);
+            }, 2000);
         });
     }
 
     return (
-        <div>
-            <h2>Ajouter une hypothèse</h2>
+        <>
             {show && <Alert variant={alertType}>
                 {alertMessage}
             </Alert>
@@ -96,8 +85,8 @@ function MyForm({ onFormValidated, validationCallback }) {
                         type="checkbox"
                         label={option}
                         value={option}
-                        checked={selectedOptions.includes(option)}
-                        onChange={handleChangeHypothesis}
+                        checked={selectedKeywords.includes(option)}
+                        onChange={updateSelectedKeywords}
                     />
                 ))}
 
@@ -113,8 +102,6 @@ function MyForm({ onFormValidated, validationCallback }) {
 
                 
             </Form>
-        </div>
+        </>
     );
 }
-
-export default MyForm;

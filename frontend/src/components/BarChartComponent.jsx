@@ -19,8 +19,7 @@ ChartJS.register(
     Legend
 );
 
-
-export default function BarChartComponent({ title, labels, datas }) {
+export default function BarChartComponent({ data }) {
     
 
     const options = {
@@ -31,31 +30,28 @@ export default function BarChartComponent({ title, labels, datas }) {
             },
             title: {
                 display: true,
-                text: title,
+                text: 'Prédictions',
             },
         },
     };
 
-    const data = {
-        labels,
+    const formattedData = {
+        labels : data.map((entry) => entry.student_number),
         datasets: [
             {
                 label: 'IPS',
-                data: datas.map((data) => (data >= 0 ? data : null)),
+                data: data.map((data) => (data.value >= 0 ? data.value : null)),
                 backgroundColor: 'rgba(187, 99, 132, 0.5)',
             },
             {
                 label: 'ASTRE',
-                data: datas.map((data) => (data < 0 ? data : null)),
+                data: data.map((data) => (data.value < 0 ? data.value : null)),
                 backgroundColor: 'rgba(255, 128, 132, 0.5)',
             },
         ],
     };
 
     return (
-        <div>
-            <h2>Prédictions</h2>
-            <Bar options={options} data={data} />
-        </div>
+        <Bar options={options} data={formattedData} />
         );
 }

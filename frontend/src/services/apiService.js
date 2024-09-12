@@ -1,8 +1,8 @@
-// src/services/apiService.js
 import axios from 'axios';
+import { Hypothesis } from '../models/Hypothesis'; 
 
 const apiClient = axios.create({
-    baseURL: process.env.REACT_APP_BACKEND_BASE_URL, 
+    baseURL: process.env.REACT_APP_BACKEND_BASE_URL,
     headers: {
         'Content-Type': 'application/json',
     },
@@ -21,7 +21,7 @@ export const getScores = async () => {
 export const addHypothesis = async (hypothesis) => {
     try {
         const response = await apiClient.post('/hypothesis', hypothesis);
-        return response.data;
+        return new Hypothesis(response.data.key_words, response.data.weight);
     } catch (error) {
         console.error('Erreur lors de l\'ajout de l\'hypothèse:', error);
         throw error;
@@ -41,7 +41,7 @@ export const deleteHypothesis = async (key_words) => {
 export const updateHypothesis = async (hypothesis) => {
     try {
         const response = await apiClient.put('/hypothesis', hypothesis);
-        return response.data;
+        return new Hypothesis(response.data.key_words, response.data.weight);
     } catch (error) {
         console.error('Erreur lors de la mise à jour de l\'hypothèse:', error);
         throw error;
@@ -56,7 +56,7 @@ export const getHypotheses = async (reset) => {
         } else {
             response = await apiClient.get('/hypotheses');
         }
-        return response.data;
+        return response.data.map(hypo => new Hypothesis(hypo.key_words, hypo.weight));
     } catch (error) {
         console.error('Erreur lors de la récupération des hypothèses:', error);
         throw error;

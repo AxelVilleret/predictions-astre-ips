@@ -1,5 +1,6 @@
 import json
 from models import Hypothesis
+from fastapi import HTTPException
 
 
 class HypothesisService:

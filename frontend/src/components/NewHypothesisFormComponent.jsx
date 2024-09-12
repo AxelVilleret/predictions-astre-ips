@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import Alert from 'react-bootstrap/Alert';
+import { Hypothesis } from '../models/Hypothesis'; // Assurez-vous d'importer la classe Hypothesis
 
 export default function MyForm({ onFormValidated }) {
     const options = ['C', 'Domotique', 'Arduino', 'JavaScript, HTML, CSS', 'VSCode', 'PME / Startups', 'Créer du contenu', 'Téléphone'];
@@ -27,13 +28,13 @@ export default function MyForm({ onFormValidated }) {
         setWeight(event.target.value);
     }
 
-
     const handleSubmit = (event) => {
         event.preventDefault();
-        onFormValidated({
-            key_words: selectedKeywords,
-            weight: selectedOption === 'ips' ? weight : -weight,
-        }).then(() => {
+        const newHypothesis = new Hypothesis(
+            selectedKeywords,
+            selectedOption === 'ips' ? weight : -weight
+        );
+        onFormValidated(newHypothesis).then(() => {
             setAlertMessage('Hypothèse ajoutée avec succès');
             setAlertType('success');
             setShow(true);
@@ -99,8 +100,6 @@ export default function MyForm({ onFormValidated }) {
                         Ajouter
                     </Button>
                 </div>
-
-                
             </Form>
         </>
     );

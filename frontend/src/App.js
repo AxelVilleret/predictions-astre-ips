@@ -8,37 +8,32 @@ import { getScores, addHypothesis, deleteHypothesis, updateHypothesis, getHypoth
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import { Button } from 'react-bootstrap';
+import { Hypothesis } from './models/Hypothesis';
 
 function App() {
 
   const [studentScores, setStudentScores] = useState([]);
   const [hypotheses, setHypotheses] = useState([]);
-  
-  const ipsHypotheses = useMemo(() => hypotheses.filter((hypo) => hypo.weight > 0), [hypotheses]);
-  const astreHypotheses = useMemo(() => hypotheses.filter((hypo) => hypo.weight < 0), [hypotheses]);
+
+  const ipsHypotheses = useMemo(() => hypotheses.filter((hypo) => hypo.isIps()), [hypotheses]);
+  const astreHypotheses = useMemo(() => hypotheses.filter((hypo) => hypo.isAstre()), [hypotheses]);
 
   useEffect(() => {
-    getHypotheses().then((hypotheses) => setHypotheses(hypotheses));
+    getHypotheses().then(setHypotheses);
   }, []);
 
   useEffect(() => {
-    getScores().then((scores) => setStudentScores(scores));
+    getScores().then(setStudentScores);
   }, [hypotheses]);
 
-  const areHypothesesEqual = (hypo1, hypo2) => {
-    return hypo1.key_words.join(' | ') === hypo2.key_words.join(' | ');
-  }
-
   const resetHypotheses = () => {
-    getHypotheses(true).then((hypotheses) => setHypotheses(hypotheses));
+    getHypotheses(true).then(setHypotheses);
   }
 
   const updateHypo = (hypothesis) => {
     updateHypothesis(hypothesis).then((updatedHypothesis) => {
-      setHypotheses(hypotheses.map((hypo) => areHypothesesEqual(hypo, updatedHypothesis) ? updatedHypothesis : hypo));
-
-    }
-    );
+      setHypotheses(hypotheses.map((hypo) => hypo.equals(updatedHypothesis) ? updatedHypothesis : hypo));
+    });
   }
 
   const addHypo = (newHypothesis) => {
@@ -48,11 +43,10 @@ function App() {
   }
 
   const deleteHypo = (hypothesis) => {
-    deleteHypothesis(hypothesis.key_words.join(' | ')).then(() => {
-      setHypotheses(hypotheses.filter((hypo) => !areHypothesesEqual(hypo, hypothesis)));
+    deleteHypothesis(hypothesis.toString()).then(() => {
+      setHypotheses(hypotheses.filter((hypo) => !hypo.equals(hypothesis)));
     });
   }
-
 
   return (
     <div className="App">
@@ -66,12 +60,12 @@ function App() {
           <HypothesesGroupComponent hypotheses={ipsHypotheses} onUpdateHypothesis={updateHypo} onDeleteHypothesis={deleteHypo} />
         </div>
         <div className='container_hypothesis__item'>
-          <h2>Hypothèses ASTRE</h2>
-          <HypothesesGroupComponent hypotheses={astreHypotheses} onUpdateHypothesis={updateHypo} onDeleteHypothesis={deleteHypo} />
-        </div>
-        <div className='container_hypothesis__item'>
           <h2>Ajouter une hypothèse</h2>
           <FormComponent onFormValidated={addHypo} />
+        </div>
+        <div className='container_hypothesis__item'>
+          <h2>Hypothèses ASTRE</h2>
+          <HypothesesGroupComponent hypotheses={astreHypotheses} onUpdateHypothesis={updateHypo} onDeleteHypothesis={deleteHypo} />
         </div>
       </div>
       <div className='container_hypothesis'>
@@ -79,7 +73,7 @@ function App() {
           <h2>Prédictions</h2>
           <BarChart data={studentScores} />
         </div>
-        </div>
+      </div>
     </div>
   );
 }

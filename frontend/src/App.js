@@ -5,12 +5,15 @@ import FormComponent from "./components/NewHypothesisFormComponent";
 import 'bootstrap/dist/css/bootstrap.css';
 import HypothesesGroupComponent from './components/HypothesesGroupComponent';
 import { getScores, addHypothesis, deleteHypothesis, updateHypothesis, getHypotheses } from './services/apiService';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap-icons/font/bootstrap-icons.css';
+import { Button } from 'react-bootstrap';
 
 function App() {
 
   const [studentScores, setStudentScores] = useState([]);
   const [hypotheses, setHypotheses] = useState([]);
-
+  
   const ipsHypotheses = useMemo(() => hypotheses.filter((hypo) => hypo.weight > 0), [hypotheses]);
   const astreHypotheses = useMemo(() => hypotheses.filter((hypo) => hypo.weight < 0), [hypotheses]);
 
@@ -24,6 +27,10 @@ function App() {
 
   const areHypothesesEqual = (hypo1, hypo2) => {
     return hypo1.key_words.join(' | ') === hypo2.key_words.join(' | ');
+  }
+
+  const resetHypotheses = () => {
+    getHypotheses(true).then((hypotheses) => setHypotheses(hypotheses));
   }
 
   const updateHypo = (hypothesis) => {
@@ -41,7 +48,7 @@ function App() {
   }
 
   const deleteHypo = (hypothesis) => {
-    deleteHypothesis(hypothesis).then(() => {
+    deleteHypothesis(hypothesis.key_words.join(' | ')).then(() => {
       setHypotheses(hypotheses.filter((hypo) => !areHypothesesEqual(hypo, hypothesis)));
     });
   }
@@ -50,6 +57,9 @@ function App() {
   return (
     <div className="App">
       <h1>Prédictions ASTRE/IPS</h1>
+      <Button variant="primary" onClick={resetHypotheses}>
+        <i className="bi bi-arrow-clockwise"></i> Réinitialiser les hypothèses
+      </Button>
       <div className='container_hypothesis'>
         <div className='container_hypothesis__item'>
           <h2>Hypothèses IPS</h2>

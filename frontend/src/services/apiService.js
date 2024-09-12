@@ -28,9 +28,9 @@ export const addHypothesis = async (hypothesis) => {
     }
 };
 
-export const deleteHypothesis = async (hypothesis) => {
+export const deleteHypothesis = async (key_words) => {
     try {
-        const response = await apiClient.delete('/hypothesis', hypothesis);
+        const response = await apiClient.delete(`/hypothesis?key_words=${key_words}`);
         return response.data;
     } catch (error) {
         console.error('Erreur lors de la suppression de l\'hypothèse:', error);
@@ -48,9 +48,14 @@ export const updateHypothesis = async (hypothesis) => {
     }
 };
 
-export const getHypotheses = async () => {
+export const getHypotheses = async (reset) => {
     try {
-        const response = await apiClient.get('/hypotheses');
+        let response = null;
+        if (reset) {
+            response = await apiClient.get('/hypotheses?reset=true');
+        } else {
+            response = await apiClient.get('/hypotheses');
+        }
         return response.data;
     } catch (error) {
         console.error('Erreur lors de la récupération des hypothèses:', error);

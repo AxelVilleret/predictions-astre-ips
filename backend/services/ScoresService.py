@@ -6,9 +6,9 @@ class ScoresService:
     def __init__(self, answers):
         self.answers = answers
         self.results = []
-        self._init_results()
 
     def execute(self, hypotheses):
+        self._init_results()
         for answer in self.answers:
             for hypothesis in hypotheses:
                 if self._is_valid_hypothesis(hypothesis, answer):

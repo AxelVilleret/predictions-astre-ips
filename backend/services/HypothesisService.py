@@ -5,9 +5,10 @@ from models import Hypothesis
 class HypothesisService:
     def __init__(self, file_path='data/hypotheses.json'):
         self.file_path = file_path
-        self.hypotheses = self._read_hypotheses()
+        self.hypotheses = []
 
     def get_hypotheses(self):
+        self._read_hypotheses()
         return self.hypotheses
     
     def add_hypothesis(self, hypothesis):
@@ -41,4 +42,4 @@ class HypothesisService:
     def _read_hypotheses(self):
         with open(self.file_path, 'r') as file:
             data = json.load(file)
-            return [Hypothesis(**item) for item in data]
+            self.hypotheses = [Hypothesis(**item) for item in data]
